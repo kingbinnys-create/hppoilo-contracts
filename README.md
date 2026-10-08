@@ -1,6 +1,6 @@
-# astroid-contract
+# hppoilo-contracts
 
-[![CI](https://github.com/ASTROIDX556/astroid-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/ASTROIDX556/astroid-contract/actions/workflows/ci.yml)
+[![CI](https://github.com/ASTROIDX556/hppoilo-contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/ASTROIDX556/hppoilo-contracts/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stellar](https://img.shields.io/badge/Built%20on-Stellar%20Soroban-7C3AED)](https://stellar.org)
 [![Drips Wave](https://img.shields.io/badge/Drips-Stellar%20Wave-blue)](https://www.drips.network/wave/stellar)
@@ -72,17 +72,21 @@ Registry ──► Wallet ──► Treasury
 # Prerequisites: Rust stable + Stellar CLI
 cargo install --locked stellar-cli
 
-# Build all contracts
-stellar contract build
+# Build all contracts (the repo is split into two Cargo workspaces)
+stellar contract build                            # root: registry, wallet, treasury, multisig
+(cd contracts/modules && stellar contract build)  # modules: proposal, budget, policy, escrow
 
-# Run all tests
+# Run all tests (root workspace includes the cross-contract integration suite)
 cargo test --workspace
+cargo test --workspace --manifest-path contracts/modules/Cargo.toml
 
-# Format check
+# Format check (both workspaces)
 cargo fmt --check
+cargo fmt --check --manifest-path contracts/modules/Cargo.toml
 
-# Lint
+# Lint (both workspaces)
 cargo clippy --workspace -- -D warnings
+cargo clippy --workspace --manifest-path contracts/modules/Cargo.toml -- -D warnings
 ```
 
 ## Deployment (Testnet)
@@ -104,19 +108,29 @@ stellar contract deploy \
 
 ## Workspace Structure
 
+The repository is divided into **two Cargo workspaces**, each with its own
+`Cargo.toml`, `Cargo.lock` and `target/` directory. They reference each other
+through plain path dependencies (the root integration tests need all eight
+contracts; the proposal tests need multisig), so build and test **both**.
+
 ```
-astroid-contract/
+hppoilo-contracts/                # workspace 1 (root): core + shared + tests
 ├── contracts/
-│   ├── registry/     # Protocol source of truth
-│   ├── wallet/       # Per-org Stellar wallet
-│   ├── treasury/     # Asset pool management
-│   ├── multisig/     # k-of-n threshold signing
-│   ├── proposal/     # Approval lifecycle
-│   ├── budget/       # Spending limits
-│   ├── policy/       # Transfer rule engine
-│   └── escrow/       # Time-locked escrow
-├── interfaces/       # Shared contract interface traits
-└── shared/           # Shared types, errors, constants, validation
+│   └── core/                    # Core Protocol contracts
+│       ├── registry/            # Protocol source of truth
+│       ├── wallet/              # Per-org Stellar wallet
+│       ├── treasury/            # Asset pool management
+│       └── multisig/            # k-of-n threshold signing
+├── interfaces/                  # Shared contract interface traits
+├── shared/                      # Shared types, errors, constants, validation
+└── tests/                       # Integration tests across all eight contracts
+
+contracts/modules/               # workspace 2: governance & extension modules
+├── Cargo.toml                   # Separate workspace root
+├── proposal/                    # Approval lifecycle
+├── budget/                      # Spending limits
+├── policy/                      # Transfer rule engine
+└── escrow/                      # Time-locked escrow
 ```
 
 ## Related Repositories

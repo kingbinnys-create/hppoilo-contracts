@@ -12,7 +12,7 @@ This branch tracks the policy contract work for deterministic error code mapping
 The contract is validated with:
 
 ```bash
-cargo test -p astroid-policy
+cargo test -p astroid-policy --manifest-path contracts/modules/Cargo.toml
 ```
 
 Current result in this environment: 86 passed, 0 failed.

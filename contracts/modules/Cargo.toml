@@ -1,0 +1,59 @@
+# Astroid — Governance & Extension Module Workspace (Soroban / Stellar)
+#
+# Second half of the contract codebase. The repository root workspace owns
+# shared, interfaces, the four core protocol contracts and the integration
+# test suite; this workspace owns the four governance/extension module
+# contracts. Both halves cross-reference each other via path dependencies
+# (this workspace's proposal tests need multisig; the root integration tests
+# need every contract), so each workspace keeps its own Cargo.lock and target
+# directory.
+#
+# soroban-sdk is pinned here exactly as it is pinned in the root workspace;
+# keep the two versions in sync when upgrading.
+
+[workspace]
+resolver = "2"
+members = [
+    "proposal",
+    "budget",
+    "policy",
+    "escrow",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Astroid <opensource@astroid.dev>"]
+repository = "https://github.com/AstroidHQ/hppoilo-contracts"
+homepage = "https://astroid.dev"
+rust-version = "1.74"
+
+[workspace.dependencies]
+# Single, consistent Soroban SDK version for this workspace (mirrors the root
+# workspace pin — see the root Cargo.toml).
+soroban-sdk = "21.7.7"
+astroid-shared = { path = "../../shared" }
+astroid-interfaces = { path = "../../interfaces" }
+# Cross-workspace dependency: proposal's unit tests deploy the real multisig.
+astroid-multisig = { path = "../core/multisig" }
+
+# ---------------------------------------------------------------------------
+# Release profile tuned for Soroban Wasm output (small, deterministic, safe).
+# Mirrors the root workspace profile: overflow-checks stays ON even in
+# release, because financial arithmetic must never silently wrap.
+# ---------------------------------------------------------------------------
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true
+
+# Same as release but keeps debug assertions/logs — handy for local Wasm debugging.
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true

@@ -16,6 +16,10 @@ jobs:
         with:
           targets: wasm32v1-none
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            .
+            contracts/modules
       # Install a pinned prebuilt stellar-cli. `cargo install stellar-cli` is not
       # used because the `opt` feature it needs no longer exists on the crate
       # (renamed in v28), which would break the build job for every PR.
@@ -25,8 +29,11 @@ jobs:
       # 28.x builds protocol-21 contracts out of the box.
       - name: Install Stellar CLI
         run: cargo install --locked stellar-cli --no-default-features
-      - name: Build contracts
+      - name: Build contracts (root workspace: core)
         run: stellar contract build
+      - name: Build contracts (modules workspace)
+        run: stellar contract build
+        working-directory: contracts/modules
 
   test:
     name: test
@@ -38,8 +45,15 @@ jobs:
         with:
           targets: wasm32v1-none
       - uses: Swatinem/rust-cache@v2
-      - name: Run tests
+        with:
+          workspaces: |
+            .
+            contracts/modules
+      - name: Run tests (root workspace: core + integration)
         run: cargo test --workspace
+      - name: Run tests (modules workspace)
+        run: cargo test --workspace
+        working-directory: contracts/modules
 
   fmt:
     name: fmt
@@ -50,6 +64,8 @@ jobs:
         with:
           components: rustfmt
       - run: cargo fmt --check
+      - run: cargo fmt --check
+        working-directory: contracts/modules
 
   clippy:
     name: clippy
@@ -61,4 +77,10 @@ jobs:
           components: clippy
           targets: wasm32v1-none
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            .
+            contracts/modules
       - run: cargo clippy --workspace -- -D warnings
+      - run: cargo clippy --workspace -- -D warnings
+        working-directory: contracts/modules

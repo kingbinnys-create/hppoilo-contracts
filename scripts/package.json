@@ -1,0 +1,23 @@
+{
+  "name": "@astroid/hppoilo-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "deploy:local": "tsx src/deploy-local.ts",
+    "fmt": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^12.3.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

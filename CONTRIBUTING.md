@@ -7,15 +7,20 @@ the open and welcome issues, discussion, and pull requests.
 ## Getting started
 
 ```bash
-git clone https://github.com/ASTROIDX556/astroid-contract.git
-cd astroid-contract
-cargo build                                     # build all contracts
-cargo test                                      # run the test suites
-stellar contract build                          # build optimized WASM
+git clone https://github.com/ASTROIDX556/hppoilo-contracts.git
+cd hppoilo-contracts
+cargo build                                     # build the root workspace (core contracts)
+cargo test                                      # run the root test suites
+(cd contracts/modules && cargo build && cargo test)   # module contracts workspace
+stellar contract build                          # build optimized WASM (root workspace)
+(cd contracts/modules && stellar contract build)      # optimized WASM (modules workspace)
 ```
 
-This is a **Cargo workspace** containing 8 core Soroban smart contracts plus
-shared libraries and interface definitions.
+This repository contains **two Cargo workspaces**: the root workspace (shared
+libraries, interface definitions, the four core Soroban contracts and the
+integration tests) and `contracts/modules/` (the four governance/extension
+module contracts). Run cargo commands in both directories — see the root
+`README.md` for the full command list.
 
 ## Ground rules
 
@@ -33,7 +38,7 @@ shared libraries and interface definitions.
 
 ## Pull request checklist
 
-1. `cargo build && cargo test` all pass.
+1. `cargo build && cargo test` pass in both workspaces (repository root and `contracts/modules/`).
 2. New contracts include `README.md` explaining the purpose, interface, and storage layout.
 3. Events follow the standard naming conventions in `shared/events.rs`.
 4. Error codes are added to `shared/errors.rs`.

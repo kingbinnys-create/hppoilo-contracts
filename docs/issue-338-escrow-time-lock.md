@@ -12,7 +12,7 @@ This branch tracks the issue for the Escrow contract time-lock and expiry valida
 The contract is validated with:
 
 ```bash
-cargo test -p astroid-escrow
+cargo test -p astroid-escrow --manifest-path contracts/modules/Cargo.toml
 ```
 
 Current result in this environment: 67 passed, 0 failed.

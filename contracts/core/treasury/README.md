@@ -61,7 +61,7 @@ Every value path (`deposit`, `withdraw`, `batch_transfer`,
 Note that Soroban's test address generator mints contract-format addresses,
 so unit/integration tests that exercise gated flows must register their test
 admin/funder under the expected module kinds (see
-`contracts/treasury/src/test.rs` and `tests/src/gated_fund_flows.rs`).
+`contracts/core/treasury/src/test.rs` and `tests/src/gated_fund_flows.rs`).
 
 ## Events
 

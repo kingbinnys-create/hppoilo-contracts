@@ -15,7 +15,7 @@ This branch tracks the budget contract work for issue #334.
 The contract is validated with:
 
 ```bash
-cargo test -p astroid-budget
+cargo test -p astroid-budget --manifest-path contracts/modules/Cargo.toml
 ```
 
 Current result in this environment: 77 passed, 0 failed.

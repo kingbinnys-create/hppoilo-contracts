@@ -6,21 +6,31 @@
 #
 # soroban-sdk is pinned once here (v21.x) and referenced by every member via
 # `soroban-sdk = { workspace = true }` so all crates build against one version.
+#
+# The codebase is split into two Cargo workspaces:
+#   1. This root workspace: shared libraries, interfaces, the four core
+#      protocol contracts (registry, wallet, treasury, multisig) and the
+#      integration test suite, which deploys every contract into one Env.
+#   2. `contracts/modules/`: the four governance/extension module contracts
+#      (proposal, budget, policy, escrow), with their own Cargo.toml,
+#      Cargo.lock and target dir.
+# The two halves reference each other across the boundary through plain path
+# dependencies (the root integration tests need all eight contracts; the
+# proposal tests need multisig), so run cargo commands in both directories.
 
 [workspace]
 resolver = "2"
 members = [
     "shared",
     "interfaces",
-    "contracts/registry",
-    "contracts/wallet",
-    "contracts/multisig",
-    "contracts/proposal",
-    "contracts/treasury",
-    "contracts/budget",
-    "contracts/policy",
-    "contracts/escrow",
+    "contracts/core/registry",
+    "contracts/core/wallet",
+    "contracts/core/multisig",
+    "contracts/core/treasury",
     "tests",
+]
+exclude = [
+    "contracts/modules",
 ]
 
 [workspace.package]
@@ -28,7 +38,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 authors = ["Astroid <opensource@astroid.dev>"]
-repository = "https://github.com/AstroidHQ/astroid-contract"
+repository = "https://github.com/AstroidHQ/hppoilo-contracts"
 homepage = "https://astroid.dev"
 rust-version = "1.74"
 
@@ -37,6 +47,14 @@ rust-version = "1.74"
 soroban-sdk = "21.7.7"
 astroid-shared = { path = "shared" }
 astroid-interfaces = { path = "interfaces" }
+astroid-registry = { path = "contracts/core/registry" }
+astroid-wallet = { path = "contracts/core/wallet" }
+astroid-multisig = { path = "contracts/core/multisig" }
+astroid-treasury = { path = "contracts/core/treasury" }
+astroid-proposal = { path = "contracts/modules/proposal" }
+astroid-budget = { path = "contracts/modules/budget" }
+astroid-policy = { path = "contracts/modules/policy" }
+astroid-escrow = { path = "contracts/modules/escrow" }
 
 # ---------------------------------------------------------------------------
 # Release profile tuned for Soroban Wasm output (small, deterministic, safe).

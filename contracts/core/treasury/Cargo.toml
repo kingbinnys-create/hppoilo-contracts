@@ -1,6 +1,6 @@
 [package]
-name = "astroid-proposal"
-description = "Astroid Proposal contract: approval lifecycle for actions awaiting sign-off, linked to wallet/policy/org."
+name = "astroid-treasury"
+description = "Astroid Treasury contract: organizational fund custody with budget, policy, and multisig enforcement."
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -19,5 +19,8 @@ astroid-shared = { workspace = true }
 astroid-interfaces = { workspace = true }
 
 [dev-dependencies]
-astroid-multisig = { path = "../multisig" }
 soroban-sdk = { workspace = true, features = ["testutils"] }
+# Issue #308 tests deploy the real registry (to exercise the caller-verification
+# gate end to end) and the real wallet (as a registered, first-class depositor).
+astroid-registry = { workspace = true }
+astroid-wallet = { workspace = true }

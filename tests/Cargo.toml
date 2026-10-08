@@ -21,14 +21,14 @@ astroid-interfaces = { workspace = true }
 
 # Integration tests deploy every workspace contract into a shared Env, so all
 # eight contracts are compiled in as dev-dependencies.
-astroid-budget = { path = "../contracts/budget" }
-astroid-escrow = { path = "../contracts/escrow" }
-astroid-multisig = { path = "../contracts/multisig" }
-astroid-policy = { path = "../contracts/policy" }
-astroid-proposal = { path = "../contracts/proposal" }
-astroid-registry = { path = "../contracts/registry" }
-astroid-treasury = { path = "../contracts/treasury" }
-astroid-wallet = { path = "../contracts/wallet" }
+astroid-budget = { workspace = true }
+astroid-escrow = { workspace = true }
+astroid-multisig = { workspace = true }
+astroid-policy = { workspace = true }
+astroid-proposal = { workspace = true }
+astroid-registry = { workspace = true }
+astroid-treasury = { workspace = true }
+astroid-wallet = { workspace = true }
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }

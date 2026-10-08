@@ -1,5 +1,8 @@
 /target/
+/contracts/modules/target/
 **/*.rs.bk
 *.rs.bk
 .cargo/
 **/test_snapshots/
+tsconfig.base.json
+scripts/node_modules
